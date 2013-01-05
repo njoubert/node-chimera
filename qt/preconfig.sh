@@ -119,9 +119,6 @@ cd src/3rdparty/webkit/Source/JavaScriptCore
 make -j$COMPILE_JOBS
 cd ../../../../..
 
-cat include/QtGui/QtGui | grep -v -e 'qs60' -e 'qvfbhdr' -e 'qwsembedwidget' > include/QtGui/QtGui.new
-mv include/QtGui/QtGui.new include/QtGui/QtGui
-
 # Extra step to ensure the static libraries are found
 cp -rp src/3rdparty/webkit/Source/JavaScriptCore/release/* lib/
 cp -rp src/3rdparty/webkit/Source/WebCore/release/* lib/

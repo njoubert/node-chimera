@@ -18,13 +18,3 @@ config.tests
 /src/corelib/global/qconfig.h
 /src/corelib/global/qconfig.h.qmake
 /src/tools/bootstrap/libbootstrap.*
-Makefile
-*.Debug
-*.Release
-Makefile.WebKit.QtWebKit
-Makefile.WebKit
-*.bak
-.moc
-.obj
-*.o
-.rcc

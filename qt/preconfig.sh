@@ -108,7 +108,7 @@ done
 # For parallelizing the bootstrapping process, e.g. qmake and friends.
 export MAKEFLAGS=-j$COMPILE_JOBS
 
-./configure -prefix $PWD $QT_CFG
+./configure -prefix $PWD/compiled $QT_CFG
 make -j$COMPILE_JOBS
 
 cd src/3rdparty/webkit/Source/WebCore

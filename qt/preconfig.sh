@@ -10,7 +10,6 @@ QT_CFG+=' -v'                   # Makes it easier to see what header dependencie
 if [[ $OSTYPE = darwin* ]]; then
     QT_CFG+=' -static'          # Static build on Mac OS X only
     QT_CFG+=' -arch x86_64'
-    QT_CFG+=' -cocoa'           # Cocoa only, ignore Carbon
     QT_CFG+=' -no-dwarf2'
 else
     QT_CFG+=' -system-freetype' # Freetype for text rendering
@@ -28,6 +27,8 @@ QT_CFG+=' -nomake tools'        # Don't built the tools
 
 QT_CFG+=' -no-exceptions'       # Don't use C++ exception
 QT_CFG+=' -no-stl'              # No need for STL compatibility
+QT_CFG+=' -javascript-jit'
+QT_CFG+=' -webkit'
 
 # Irrelevant Qt features
 QT_CFG+=' -no-libmng'
@@ -78,6 +79,7 @@ QT_CFG+=' -D QT_NO_STYLE_CLEANLOOKS'
 QT_CFG+=' -D QT_NO_STYLE_MOTIF'
 QT_CFG+=' -D QT_NO_STYLE_PLASTIQUE'
 
+
 until [ -z "$1" ]; do
     case $1 in
         "--qt-config")
@@ -108,6 +110,17 @@ export MAKEFLAGS=-j$COMPILE_JOBS
 
 ./configure -prefix $PWD $QT_CFG
 make -j$COMPILE_JOBS
+
+cd src/3rdparty/webkit/Source/WebCore
+make -j$COMPILE_JOBS
+cd ../../../../..
+
+cd src/3rdparty/webkit/Source/JavaScriptCore
+make -j$COMPILE_JOBS
+cd ../../../../..
+
+cat include/QtGui/QtGui | grep -v -e 'qs60' -e 'qvfbhdr' -e 'qwsembedwidget' > include/QtGui/QtGui.new
+mv include/QtGui/QtGui.new include/QtGui/QtGui
 
 # Extra step to ensure the static libraries are found
 cp -rp src/3rdparty/webkit/Source/JavaScriptCore/release/* lib/

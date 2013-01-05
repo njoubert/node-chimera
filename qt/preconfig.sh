@@ -122,3 +122,8 @@ cd ../../../../..
 # Extra step to ensure the static libraries are found
 cp -rp src/3rdparty/webkit/Source/JavaScriptCore/release/* lib/
 cp -rp src/3rdparty/webkit/Source/WebCore/release/* lib/
+
+mkdir -p ../qt_compiled/lib
+cp -f lib/*.a ../qt_compiled/lib
+cp -rf include ../qt_compiled/
+cat include/QtGui/QtGui | grep -v -e 'qs60' -e 'qvfbhdr' -e 'qwsembedwidget' > ../qt_compiled/include/QtGui/QtGui

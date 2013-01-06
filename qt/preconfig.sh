@@ -107,8 +107,9 @@ done
 
 # For parallelizing the bootstrapping process, e.g. qmake and friends.
 export MAKEFLAGS=-j$COMPILE_JOBS
+export OPENSSL_LIBS='-L../openssl -lssl -lcrypto'
 
-./configure -prefix ../qt_compiled $QT_CFG OPENSSL_LIBS='-L../openssl -lssl -lcrypto'
+./configure -prefix ../qt_compiled $QT_CFG 
 make -j$COMPILE_JOBS install
 
 cd src/3rdparty/webkit/Source/WebCore
@@ -125,7 +126,4 @@ cp -rp src/3rdparty/webkit/Source/WebCore/release/* ../qt_compiled/lib/
 
 cp -rf include/QtScript ../qt_compiled/include/
 
-mkdir -p ../qt_compiled/lib
-cp -f lib/*.a ../qt_compiled/lib
-cp -rf include ../qt_compiled/
 cat include/QtGui/QtGui | grep -v -e 'qs60' -e 'qvfbhdr' -e 'qwsembedwidget' > ../qt_compiled/include/QtGui/QtGui

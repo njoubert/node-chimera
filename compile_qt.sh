@@ -1,5 +1,7 @@
 #!/bin/bash
 
+cd qt
+
 COMPILE_JOBS=4
 
 QT_CFG=''
@@ -124,6 +126,6 @@ cd ../../../../..
 cp -rp src/3rdparty/webkit/Source/JavaScriptCore/release/* ../qt_compiled/lib/
 cp -rp src/3rdparty/webkit/Source/WebCore/release/* ../qt_compiled/lib/
 
-cp -rf include/QtScript ../qt_compiled/include/
+ln -s include/QtScript ../qt_compiled/include/
 
 cat include/QtGui/QtGui | grep -v -e 'qs60' -e 'qvfbhdr' -e 'qwsembedwidget' > ../qt_compiled/include/QtGui/QtGui

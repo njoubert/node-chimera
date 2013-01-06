@@ -70,7 +70,7 @@ QT_CFG+=' -qt-libpng'
 QT_CFG+=' -qt-zlib'
 
 # Explicitly compile with SSL support, so build will fail if headers are missing
-QT_CFG+=' -openssl'
+QT_CFG+=' -openssl-linked'
 
 # Useless styles
 QT_CFG+=' -D QT_NO_STYLESHEET'
@@ -108,8 +108,8 @@ done
 # For parallelizing the bootstrapping process, e.g. qmake and friends.
 export MAKEFLAGS=-j$COMPILE_JOBS
 
-./configure -prefix $PWD/compiled $QT_CFG
-make -j$COMPILE_JOBS
+./configure -prefix ../qt_compiled $QT_CFG OPENSSL_LIBS='-L../openssl -lssl -lcrypto'
+make -j$COMPILE_JOBS install
 
 cd src/3rdparty/webkit/Source/WebCore
 make -j$COMPILE_JOBS
@@ -120,8 +120,10 @@ make -j$COMPILE_JOBS
 cd ../../../../..
 
 # Extra step to ensure the static libraries are found
-cp -rp src/3rdparty/webkit/Source/JavaScriptCore/release/* lib/
-cp -rp src/3rdparty/webkit/Source/WebCore/release/* lib/
+cp -rp src/3rdparty/webkit/Source/JavaScriptCore/release/* ../qt_compiled/lib/
+cp -rp src/3rdparty/webkit/Source/WebCore/release/* ../qt_compiled/lib/
+
+cp -rf include/QtScript ../qt_compiled/include/
 
 mkdir -p ../qt_compiled/lib
 cp -f lib/*.a ../qt_compiled/lib

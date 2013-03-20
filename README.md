@@ -166,6 +166,13 @@ Since this library does use native libraries, I may not have a native version fo
 me about arm-linux and sunos).  Hopefully I can describe how one can compile this under your platform, and perhaps we can
 move to something easier.  
 
+### Getting node-gyp
+
+This project uses the Generate Your Projects build system, which you can install using node-gyp:
+
+    npm install -g node-gyp
+
+
 ### Compiling on the mac:
 
 Getting a binary on the mac is fairly easy, but it does take a long time to compile Qt.  Unlike Linux, you don't need

@@ -18,11 +18,18 @@ Browser::~Browser() {
   delete chimera_;
 }
 
+/* 
+ *   ============== STEP 1 : Initializing a Constructor for the Browser. ==================
+ */
 void Browser::Initialize(Handle<Object> target) {
+
+  //First, we create the FunctionTemplate for "New", 
+  //called in javascript with new webkit.Browser(...);
   Local<FunctionTemplate> tpl = FunctionTemplate::New(New);
   tpl->SetClassName(String::NewSymbol("Browser"));
   tpl->InstanceTemplate()->SetInternalFieldCount(1);  
 
+  //Expose all the prototype functions, that is, methods on the Browser class
   tpl->PrototypeTemplate()->Set(String::NewSymbol("open"), FunctionTemplate::New(Open)->GetFunction());
   tpl->PrototypeTemplate()->Set(String::NewSymbol("close"), FunctionTemplate::New(Close)->GetFunction());
   tpl->PrototypeTemplate()->Set(String::NewSymbol("capture"), FunctionTemplate::New(Capture)->GetFunction());
@@ -30,11 +37,17 @@ void Browser::Initialize(Handle<Object> target) {
   tpl->PrototypeTemplate()->Set(String::NewSymbol("setCookies"), FunctionTemplate::New(SetCookies)->GetFunction());
   tpl->PrototypeTemplate()->Set(String::NewSymbol("setProxy"), FunctionTemplate::New(SetProxy)->GetFunction());
 
+  //Expose this Browser to the module, 
+  //equivalent to "exports.Browser = Browser;"
   constructor = Persistent<Function>::New(
       tpl->GetFunction());
   target->Set(String::NewSymbol("Browser"), constructor);
 }
 
+/* 
+ * The constructor for creating a browser.
+ * var browser = new webkit.Browser(userAgent, libraryCode, cookies, disableImages);
+ */
 Handle<Value> Browser::New(const Arguments& args) {
   HandleScope scope;
 
@@ -47,6 +60,12 @@ Handle<Value> Browser::New(const Arguments& args) {
 
   return args.This();
 }
+
+/*
+ * ============== ASYNC FUNCTIONS FOR LIBEIO ==============
+ * This provides two functions that the libeio queue manages
+ * to provide async behavior for the browser behavior
+ */
 
 void AsyncWork(uv_work_t* req) {
     BWork* work = static_cast<BWork*>(req->data);
@@ -90,6 +109,7 @@ void AsyncAfter(uv_work_t* req) {
     // work->callback.Dispose();
     // delete work;
 }
+
 
 Handle<Value> Browser::Cookies(const Arguments& args) {
   HandleScope scope;
@@ -177,6 +197,7 @@ Handle<Value> Browser::Close(const Arguments& args) {
   return scope.Close(Undefined());
 }
 
+// Main entrypoint for running pages.
 Handle<Value> Browser::Open(const Arguments& args) {
   HandleScope scope;
   
